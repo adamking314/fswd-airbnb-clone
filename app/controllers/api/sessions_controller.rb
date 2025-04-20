@@ -19,10 +19,10 @@ module Api
     def authenticated
       token = cookies.signed[:airbnb_session_token]
       session = Session.find_by(token: token)
-
+    
       if session
         @user = session.user
-        render 'api/sessions/authenticated', status: :ok
+        render json: { authenticated: true, username: @user.username, id: @user.id }, status: :ok
       else
         render json: { authenticated: false }, status: :bad_request
       end

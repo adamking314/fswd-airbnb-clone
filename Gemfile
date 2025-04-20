@@ -20,7 +20,7 @@ gem 'kaminari'
 # Use Stripe for receiving payments
 gem 'stripe'
 # Use jquery as the JavaScript library
-# gem 'jquery-rails', '~> 4.4'
+gem 'jquery-rails', '~> 4.4'
 # Use CoffeeScript for .coffee assets and views
 # gem 'coffee-rails', '~> 5.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

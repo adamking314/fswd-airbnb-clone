@@ -1,4 +1,3 @@
-// index.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Property from './property';
@@ -8,7 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const data = JSON.parse(node.getAttribute('data-params'));
 
   ReactDOM.render(
-    <Property property_id={data.property_id} />,
+    <Property 
+      property_id={data.property_id} 
+      currentUser={data.username} 
+    />,
     document.body.appendChild(document.createElement('div')),
   )
 })

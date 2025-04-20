@@ -1,6 +1,7 @@
 class Property < ApplicationRecord
     belongs_to :user
     has_many :bookings
+    has_one_attached :image
   
     validates :title, presence: true, length: { maximum: 70 }
     validates :description, presence: true, length: { maximum: 2000 }
@@ -13,4 +14,8 @@ class Property < ApplicationRecord
     validates :beds, presence: true, numericality: { only_integer: true, less_than: 20 }
     validates :baths, presence: true, numericality: { only_integer: true, less_than: 20 }
     validates :user, presence: true
+    
+    def image_url
+      Rails.application.routes.url_helpers.url_for(image) if image.attached?
+    end
   end

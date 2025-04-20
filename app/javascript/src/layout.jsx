@@ -1,5 +1,7 @@
 // layout.js
 import React from 'react';
+import LogOut from '@src/login/logOut';
+import './stylesheet.scss';
 
 const Layout = (props) => {
   return (
@@ -15,9 +17,13 @@ const Layout = (props) => {
               <li className="nav-item" >
                 <a className="nav-link" href="/login">Login</a>
               </li>
+              <li className="nav-item" >
+                <a className="nav-link" href="/user_page">Profile</a>
+              </li>
             </ul>
           </div>
         </div>
+        <LogOut/>
       </nav>
       {props.children}
       <footer className="p-3 bg-light">

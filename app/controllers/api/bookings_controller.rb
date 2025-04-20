@@ -24,6 +24,53 @@ module Api
       render 'api/bookings/index'
     end
 
+    def index
+      token = cookies.signed[:airbnb_session_token]
+      session = Session.find_by(token: token)
+      return render json: { error: 'user not logged in' }, status: :unauthorized unless session
+    
+      @bookings = session.user.bookings.includes(:property)
+      render 'api/bookings/user_bookings'
+    end
+
+    def guest_bookings
+      user = User.find_by(username: params[:username])
+      bookings = Booking.where(user_id: user.id).includes(:property)
+    
+      render json: bookings.map { |booking| 
+        booking.as_json.merge(
+          property_image_url: booking.property.image_url,
+          property_title: booking.property.title # optional: if you want more property info
+        )
+      }
+    end
+
+    def host_bookings
+      user = User.find_by(username: params[:username])
+      return render json: { error: 'user not found' }, status: :not_found unless user
+    
+      properties = user.properties
+      bookings = Booking.where(property_id: properties.pluck(:id))
+    
+      render json: bookings, include: { property: { only: [:title, :address] } }
+    end
+
+    def success
+      booking = Booking.find(params[:id])
+  
+      # Check if the charge is marked as complete
+      if booking.charge.complete?
+        status_message = "Your booking is complete!"
+      else
+        status_message = "Your booking is being processed."
+      end
+  
+      render json: {
+        booking: booking,
+        status_message: status_message
+      }
+    end
+
     private
 
     def booking_params
