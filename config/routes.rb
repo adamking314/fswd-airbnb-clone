@@ -5,10 +5,7 @@ Rails.application.routes.draw do
   get '/login' => 'static_pages#login'
   get '/user_page' => 'static_pages#user_page'
 
-
   get '/booking/:id/success' => 'bookings#success', as: 'booking_success'
-
-
   
   namespace :api do
     resources :users, only: [:create]
