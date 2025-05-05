@@ -3,7 +3,11 @@ class Property < ApplicationRecord
     has_many :bookings
     has_many_attached :images
 
+    def image_urls
+      images.map { |image| Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true) }
+    end
   
+
     validates :title, presence: true, length: { maximum: 70 }
     validates :description, presence: true, length: { maximum: 2000 }
     validates :city, presence: true, length: { maximum: 200 }
