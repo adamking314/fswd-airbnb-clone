@@ -27,3 +27,4 @@ production:
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   url: <%= ENV['DATABASE_URL'] %>
+  secret_base_key: 5c0c7c14ce61b4e2c65277ac9a995f9e00d9c9462cbc0064a8237ad7592ac983619ebb56b9f5544854c2307640dd8d912b5173bc2b6be2916e0cfcfd2a1701e9
