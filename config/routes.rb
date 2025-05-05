@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get '/property/:id' => 'static_pages#property'
   get '/login' => 'static_pages#login'
   get '/user_page' => 'static_pages#user_page'
-  # config/routes.rb
+
 
   get '/booking/:id/success' => 'bookings#success', as: 'booking_success'
 

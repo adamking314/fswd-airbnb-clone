@@ -36,7 +36,7 @@ gem 'stripe'
 gem 'kaminari'
 
 # Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+gem 'image_processing', '~> 1.2'
 # AWS S3
 gem 'aws-sdk-s3', '~> 1.114'
 # Webrick
@@ -47,7 +47,7 @@ gem 'mail', '>= 2.8.0.rc1'
 gem 'mutex_m', '~> 0.3.0'
 
 # Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
+gem 'mini_magick', '~> 4.8'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
