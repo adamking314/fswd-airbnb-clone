@@ -105,9 +105,8 @@ class UserProfile extends React.Component {
               properties.map(property => (
                 <div key={property.id} className="col-md-4 mb-3">
                   <div className="card">
-                    {property.image_url && (
-                      <img src={property.image_url} className="card-img-top" alt={property.title} />
-                    )}
+                      {property.image_url && (
+                        <img  src={property.image_url} className="card-img-top"  alt={property.title}  />)}
                     <div className="card-body">
                       <h5 className="card-title">{property.title}</h5>
                       <p className="card-text">{property.description}</p>
