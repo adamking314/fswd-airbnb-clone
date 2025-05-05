@@ -59,10 +59,7 @@ class Home extends React.Component {
              <div
                className="property-image mb-1 rounded"
              style={{
-               backgroundImage: `url(${property.image_url})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-                height: '200px', 
+               backgroundImage: `url(${property.image_url})`
                  }}>
       
            {!property.image_url && (
