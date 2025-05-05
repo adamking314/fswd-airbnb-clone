@@ -28,6 +28,7 @@ class UserProfile extends React.Component {
         }
       });
   }
+
   fetchProperties = () => {
     const { username } = this.state;
     fetch(`/api/users/${username}/property`)
@@ -55,12 +56,13 @@ class UserProfile extends React.Component {
       showCreateForm: !prevState.showCreateForm,
     }));
   }
+
   toggleGuestBookings = () => {
     this.setState(prevState => ({
       showGuestBookings: !prevState.showGuestBookings,
     }));
   }
-  
+
   render() {
     const { properties, loading, error, showCreateForm } = this.state;
 
@@ -70,22 +72,23 @@ class UserProfile extends React.Component {
     return (
       <Layout>
         <div className="container mt-4">
-          <div className="bookins-container">
+          <div className="bookings-container">
             {/* Bookings Section */}
             <div className="bookings-container mb-5">
-          <h2>My Bookings as a Guest</h2>
-               <button 
-            className="btn btn-primary mb-3" 
-             onClick={this.toggleGuestBookings}
-                 >
-              {this.state.showGuestBookings ? 'Hide My Bookings' : 'View My Bookings'}
-               </button>
+              <h2>My Bookings as a Guest</h2>
+              <button 
+                className="btn btn-primary mb-3" 
+                onClick={this.toggleGuestBookings}
+              >
+                {this.state.showGuestBookings ? 'Hide My Bookings' : 'View My Bookings'}
+              </button>
 
-           {this.state.showGuestBookings && (
-           <GuestBookings username={this.state.username}/>
+              {this.state.showGuestBookings && (
+                <GuestBookings username={this.state.username}/>
               )}
+            </div>
           </div>
-          </div>
+
           <h2>My Properties</h2>
           <button 
             className="btn btn-primary mb-3" 
@@ -105,8 +108,20 @@ class UserProfile extends React.Component {
               properties.map(property => (
                 <div key={property.id} className="col-md-4 mb-3">
                   <div className="card">
-                      {property.image_url && (
-                        <img  src={property.image_url} className="card-img-top"  alt={property.title}  />)}
+                    <div
+                      className="property-image mb-1 rounded"
+                      style={{
+                        backgroundImage: `url(${property.image_url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        height: '200px',
+                        transition: 'opacity 0.5s ease',
+                      }}
+                    >
+                      {!property.image_url && (
+                        <div className="image-loading-spinner">Loading...</div>
+                      )}
+                    </div>
                     <div className="card-body">
                       <h5 className="card-title">{property.title}</h5>
                       <p className="card-text">{property.description}</p>
@@ -117,21 +132,22 @@ class UserProfile extends React.Component {
               ))
             )}
           </div>
+
           <h2 className="mt-5">Bookings on My Properties</h2>
-            <div className="row mt-3">
+          <div className="row mt-3">
             {this.state.hostBookings.length === 0 ? (
               <p>No one has booked your properties yet.</p>
-             ) : (
-            this.state.hostBookings.map((booking) => (
-             <div key={booking.id} className="card mb-3 p-3">
-             <h4>{booking.property.title}</h4>
-             <p>{booking.property.address}</p>
-              <p><strong>Dates:</strong> {booking.start_date} → {booking.end_date}</p>
-              <p><strong>Status: </strong>{booking.paid ? 'Paid' : 'Not Paid'}</p> 
-             </div>
+            ) : (
+              this.state.hostBookings.map((booking) => (
+                <div key={booking.id} className="card mb-3 p-3">
+                  <h4>{booking.property.title}</h4>
+                  <p>{booking.property.address}</p>
+                  <p><strong>Dates:</strong> {booking.start_date} → {booking.end_date}</p>
+                  <p><strong>Status: </strong>{booking.paid ? 'Paid' : 'Not Paid'}</p>
+                </div>
               ))
-             )}
-            </div>
+            )}
+          </div>
         </div>
       </Layout>
     );
