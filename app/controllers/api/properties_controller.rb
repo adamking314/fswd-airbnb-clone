@@ -42,7 +42,10 @@ module Api
       @property = @current_user.properties.new(property_params)
     
       if params[:property][:images].present?
-        @property.images.attach(params[:property][:images]) 
+        @property.images.attach(params[:property][:images])
+        
+        # Log the attached image filenames to verify they're being attached correctly
+        Rails.logger.info("Images attached: #{@property.images.map { |image| image.filename.to_s }}")
       end
     
       if @property.save
@@ -56,6 +59,7 @@ module Api
         render json: { errors: @property.errors.full_messages }, status: :unprocessable_entity
       end
     end
+    
 
     def user_properties
       user = User.find_by(username: params[:username])
