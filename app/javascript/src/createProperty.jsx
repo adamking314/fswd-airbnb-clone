@@ -14,7 +14,7 @@ class PropertyCreate extends React.Component {
       bedrooms: '',
       beds: '',
       baths: '',
-      image: [], 
+      images: [], 
       errors: [],
       success: false,
     }
@@ -25,7 +25,7 @@ class PropertyCreate extends React.Component {
 
   handleFileChange = (e) => {
     this.setState({ images: [...e.target.files] });
-  }
+  };
   handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -46,7 +46,7 @@ class PropertyCreate extends React.Component {
         formData.append('property[images][]', image);
       });
     }
-    
+
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
   
     fetch('/api/properties', {
