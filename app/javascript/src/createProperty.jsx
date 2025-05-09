@@ -43,7 +43,7 @@ class PropertyCreate extends React.Component {
     // Add each image to the FormData
     if (this.state.images.length > 0) {
       this.state.images.forEach((image) => {
-        formData.append('property[images][]', image);
+        formData.append('property[images][]', images);
       });
     }
 
