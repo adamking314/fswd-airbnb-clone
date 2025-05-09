@@ -55,3 +55,12 @@ export function safeCredentialsForm(options = {}) {
     headers: Object.assign((options.headers || {}), authenticityHeader()),
   });
 }
+
+// In fetchHelper.js
+export function safeCredentialsForm(options = {}) {
+  return Object.assign(options, {
+    credentials: 'include',
+    mode: 'same-origin',
+    headers: Object.assign((options.headers || {}), authenticityHeader()),
+  });
+}

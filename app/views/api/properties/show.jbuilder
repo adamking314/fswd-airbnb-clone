@@ -14,7 +14,7 @@ json.property do
     json.array! @property.images do |image|
       json.image_url url_for(image)
     end
-
+  end
   json.user do
     json.id @property.user.id
     json.username @property.user.username
