@@ -137,38 +137,35 @@ class Property extends React.Component {
   }
 
   componentDidMount() {
-    // Fetch property data
-    fetch(`/api/properties/${this.props.match.params.id}`)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ property: data, loading: false });
-      })
-      .catch(error => {
-        console.error('Error fetching property:', error);
-        this.setState({ 
-          loading: false,
-          error: 'Failed to load property'
-        });
-      });
-
-    // Fetch current user data
-    fetch('/api/authenticated', {
-      method: 'GET',
-      credentials: 'include',
+    fetch(`/api/properties/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      this.setState({ property: data, loading: false });
     })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.id) {
-          this.setState({ currentUser: data });
-        } else {
-          this.setState({ error: 'Not logged in' });
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching user:', error);
-        this.setState({ error: 'Failed to fetch user' });
-      });
-  } 
+    .catch(error => {
+      console.error('Error fetching property:', error);
+      this.setState({ loading: false, error: 'Failed to load property' });
+    });
+
+  // Fetch current user data
+  fetch('/api/authenticated', {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.id) {
+        this.setState({ currentUser: data });
+      } else {
+        this.setState({ error: 'Not logged in' });
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching user:', error);
+      this.setState({ error: 'Failed to fetch user' });
+    });
+}
+
 isOwner = () => {
   const { property, currentUser } = this.state;
   console.log('Current User:', currentUser);
