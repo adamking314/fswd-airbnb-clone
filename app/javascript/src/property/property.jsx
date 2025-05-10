@@ -132,6 +132,34 @@ class Property extends React.Component {
     return currentUser && property.user && currentUser.id === property.user.id;
   }
 
+  updateFormField = (field, value) => {
+    this.setState(prevState => ({
+      form: {
+        ...prevState.form,
+        [field]: value
+      }
+    }));
+  }
+
+  startEditing = () => {
+    const { property } = this.state;
+    this.setState({
+      editing: !this.state.editing,
+      form: {
+        title: property.title || '',
+        description: property.description || '',
+        city: property.city || '',
+        country: property.country || '',
+        property_type: property.property_type || '',
+        price_per_night: property.price_per_night || '',
+        max_guests: property.max_guests || '',
+        bedrooms: property.bedrooms || '',
+        beds: property.beds || '',
+        baths: property.baths || '',
+      }
+    });
+  }
+
   render () {
     const { property, loading, editing, currentImageIndex, saving, form } = this.state;
     if (loading) {
