@@ -95,18 +95,26 @@ class Property extends React.Component {
       credentials: 'include',
     })
       .then(handleErrors)
-      .then(data => {
-        this.setState({
-          property: data.property,
-          editing: false,
-          saving: false,
-          newImages: [],
-          imagesToDelete: []
-        });
+      .then(response => {
+        if (response && response.property) {
+          this.setState({
+            property: response.property,
+            editing: false,
+            saving: false,
+            newImages: [],
+            imagesToDelete: [],
+            error: null
+          });
+        } else {
+          throw new Error('Invalid response format');
+        }
       })
       .catch(error => {
         console.error("Update failed:", error);
-        this.setState({ saving: false, error: error.message });
+        this.setState({ 
+          saving: false, 
+          error: error.message || 'Failed to update property'
+        });
       });
   }
 
