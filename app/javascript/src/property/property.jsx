@@ -4,7 +4,6 @@ import Layout from '@src/layout';
 import PropTypes from 'prop-types';
 import BookingWidget from './bookingWidget';
 import { handleErrors } from '@utils/fetchHelper';
-import { useParams } from 'react-router-dom';
 
 import './property.scss';
 
@@ -138,7 +137,6 @@ class Property extends React.Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.params; 
     // Fetch property data
     fetch(`/api/properties/${this.props.match.params.id}`)
       .then(res => res.json())
@@ -440,9 +438,4 @@ isOwner = () => {
   }
 }
 
-function PropertyWithParams(props) {
-  const params = useParams();
-  return <Property {...props} params={params} />;
-}
-
-export default PropertyWithParams;
+export default Property
