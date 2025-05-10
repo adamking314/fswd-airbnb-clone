@@ -13,12 +13,17 @@ class Property extends React.Component {
     currentImageIndex: 0, 
     editing: false,
     form: {},
-    newImages: [], // For new image uploads
-    imagesToDelete: [], // Track images to remove
+    newImages: [],
+    imagesToDelete: [],
     saving: false,
     error: null
   }
 
+  static propTypes = {
+    property_id: PropTypes.string.isRequired,
+    currentUser: PropTypes.object
+  }
+  
   startEditing = () => {
     const { property } = this.state;
     this.setState({
@@ -66,43 +71,35 @@ class Property extends React.Component {
     }
     
     this.setState({ saving: true });
-
     const formData = new FormData();
     
-    // Append basic form fields
     Object.keys(form).forEach((key) => {
       formData.append(`property[${key}]`, form[key]);
     });
 
-    // Append new images
     newImages.forEach((image) => {
       formData.append('property[images][]', image);
     });
 
-    // Append images to delete
     if (imagesToDelete.length > 0) {
       formData.append('property[images_to_delete][]', JSON.stringify(imagesToDelete));
     }
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
     fetch(`/api/properties/${property.id}`, {
       method: 'PATCH',
       headers: {
-        'X-CSRF-Token': csrfToken
+       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       },
       body: formData,
       credentials: 'include',
     })
       .then(handleErrors)
       .then(response => {
-       // Add debug logging
-    console.log('API Response:', response);
-    
     const updatedProperty = {
-      ...response,
-      user: property.user // Preserve existing user data if not in response
-    };
+          ...response,
+          user: property.user // Keep existing user data
+        };
+    
     // Check for property in response
       this.setState({
         property: response.property || response,
@@ -376,42 +373,41 @@ class Property extends React.Component {
               </form>
             ) : (
               <>
-                <div className="mb-3">
-                  <h3 className="mb-0">{title}</h3>
-                  <p className="text-uppercase mb-0 text-secondary"><small>{city}, {country}</small></p>
-                  <p className="mb-0"><small>Hosted by <b>{user.username}</b></small></p>
+              <div className="mb-3">
+                <h3 className="mb-0">{title}</h3>
+                <p className="text-uppercase mb-0 text-secondary">
+                  <small>{city}, {country}</small>
+                </p>
+                <p className="mb-0">
+                  <small>Hosted by <b>{user?.username || 'Unknown'}</b></small>
+                </p>
+              </div>
+              {this.isOwner() && (
+                <button onClick={this.startEditing} className="btn btn-primary mb-3">
+                  Edit Property
+                </button>
+              )}
+              <div>
+                <p className="mb-0 text-capitalize"><b>{property_type}</b></p>
+                <p>{description}</p>
+                <div className="property-details">
+                  <p><strong>Price:</strong> ${price_per_night} per night</p>
+                  <p><strong>Max Guests:</strong> {max_guests}</p>
+                  <p><strong>Rooms:</strong> {bedrooms} bedrooms, {beds} beds, {baths} baths</p>
                 </div>
-                {this.isOwner && (
-                  <button onClick={this.startEditing} className="btn btn-primary mb-3">
-                    Edit Property
-                  </button>
-                )}
-                <div className="mb-3">
-                    <h3 className="mb-0">{title}</h3>
-                    <p className="text-uppercase mb-0 text-secondary"><small>{city}, {country}</small></p>
-                    <p className="mb-0"><small>Hosted by <b>{user.username}</b></small></p>
-                  </div>
-                  {this.isOwner() && (
-                    <button onClick={this.startEditing} className="btn btn-primary mb-3">
-                      Edit Property
-                    </button>
-                  )}
-                  <div>
-                    <p className="mb-0 text-capitalize"><b>{property_type}</b></p>
-                    <p>{description}</p>
-                    <div className="property-details">
-                      <p><strong>Price:</strong> ${price_per_night} per night</p>
-                      <p><strong>Max Guests:</strong> {max_guests}</p>
-                      <p><strong>Rooms:</strong> {bedrooms} bedrooms, {beds} beds, {baths} baths</p>
-                    </div>
-                  </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="col-12 col-lg-5">
+          {!editing && (
+            <BookingWidget property_id={id} price_per_night={price_per_night} />
+          )}
         </div>
       </div>
-      </Layout>
-    )
+    </div>
+  </Layout>
+)
   }
 }
 
