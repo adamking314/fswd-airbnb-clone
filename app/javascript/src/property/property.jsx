@@ -55,6 +55,16 @@ class Property extends React.Component {
 
   saveChanges = () => {
     const { form, property, newImages, imagesToDelete } = this.state;
+    
+    if (!property || !property.id) {
+      console.error('Property or property id is missing');
+      this.setState({ 
+        error: 'Unable to save changes - property information is missing',
+        saving: false 
+      });
+      return;
+    }
+    
     this.setState({ saving: true });
 
     const formData = new FormData();
