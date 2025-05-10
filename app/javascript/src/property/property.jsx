@@ -10,6 +10,7 @@ class Property extends React.Component {
   state = {
     property: {},
     loading: true,
+    currentImageIndex: 0 
   }
 
   nextImage = () => {
@@ -39,7 +40,7 @@ class Property extends React.Component {
   }
 
   render () {
-    const { property, loading } = this.state;
+    const { property, loading, currentImageIndex } = this.state;
     if (loading) {
       return <p>loading...</p>;
     };
@@ -56,7 +57,7 @@ class Property extends React.Component {
       bedrooms,
       beds,
       baths,
-      images,
+      images = [],
       user,
     } = property
 
@@ -72,10 +73,10 @@ class Property extends React.Component {
     return (
       <Layout>
         <div className="carousel-container">
-          {images && images.length > 0 && (
+          {images && images.length > 0 ? (
             <>
               <img
-                src={images[this.state.currentImageIndex].image_url}
+                src={images[currentImageIndex]?.image_url}
                 alt={`Property ${title}`}
                 className="property-image"
               />
@@ -86,9 +87,11 @@ class Property extends React.Component {
                 &gt;
               </button>
               <div className="image-counter">
-                {this.state.currentImageIndex + 1} / {images.length}
+                {currentImageIndex + 1} / {images.length}
               </div>
             </>
+          ) : (
+            <div className="no-image">No images available</div>
           )}
         </div>
         <div className="container">
