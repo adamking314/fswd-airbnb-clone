@@ -11,14 +11,15 @@ class Property extends React.Component {
   state = {
     property: {},
     loading: true,
+    error: null,
+    currentUser: null,
     currentImageIndex: 0, 
     editing: false,
     form: {},
     newImages: [],
     imagesToDelete: [],
-    saving: false,
-    error: null,
-    currentUser: null
+    saving: false
+   
   }
 
   static propTypes = {
@@ -137,14 +138,10 @@ class Property extends React.Component {
 
   componentDidMount() {
     // Fetch property data
-    fetch(`/api/properties/${this.props.property_id}`)
-      .then(handleErrors)
+    fetch(`/api/properties/${this.props.match.params.id}`)
+      .then(res => res.json())
       .then(data => {
-        console.log('Property data:', data); // Debug log
-        this.setState({
-          property: data.property,
-          loading: false,
-        })
+        this.setState({ property: data, loading: false });
       })
       .catch(error => {
         console.error('Error fetching property:', error);
@@ -155,25 +152,28 @@ class Property extends React.Component {
       });
 
     // Fetch current user data
-   fetch('/api/authenticated')
-   .then(res => res.json())
-   .then(data => {
-     if (data && data.id) {
-       this.setState({ currentUser: data });
-     } else {
-       this.setState({ error: 'Not logged in' });
-     }
-   })
-   .catch(() => {
-     this.setState({ error: 'Failed to fetch user' });
-   });
-}
-
+    fetch('/api/authenticated', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.id) {
+          this.setState({ currentUser: data });
+        } else {
+          this.setState({ error: 'Not logged in' });
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching user:', error);
+        this.setState({ error: 'Failed to fetch user' });
+      });
+  } 
 isOwner = () => {
- const { property, currentUser } = this.state;
- console.log('Current User:', currentUser);
- console.log('Property User:', property.user);
- return currentUser && property.user && currentUser.id === property.user.id;
+  const { property, currentUser } = this.state;
+  console.log('Current User:', currentUser);
+  console.log('Property User:', property.user);
+  return currentUser && property.user && currentUser.id === property.user.id;
 }
   updateFormField = (field, value) => {
     this.setState(prevState => ({
