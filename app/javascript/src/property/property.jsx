@@ -138,7 +138,7 @@ class Property extends React.Component {
   componentDidMount() {
     // Fetch property data
     console.log('Component mounting with property_id:', this.props.property_id); // Add debug log
-    
+
     fetch(`/api/properties/${this.props.property_id}`)
       .then(handleErrors)
       .then(data => {
@@ -210,6 +210,7 @@ class Property extends React.Component {
 
   render () {
     const { property, loading, editing, currentImageIndex, saving, form } = this.state;
+    const { currentUser } = this.props;
     if (loading) {
       return <p>loading...</p>;
     };
@@ -229,6 +230,8 @@ class Property extends React.Component {
       images = [],
       user,
     } = property
+
+    const displayUser = currentUser || user;
 
     const propertyImages = images?.map((image, index) => (
       <img 
