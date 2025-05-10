@@ -96,19 +96,24 @@ class Property extends React.Component {
     })
       .then(handleErrors)
       .then(response => {
-        if (response && response.property) {
-          this.setState({
-            property: response.property,
-            editing: false,
-            saving: false,
-            newImages: [],
-            imagesToDelete: [],
-            error: null
-          });
-        } else {
-          throw new Error('Invalid response format');
-        }
-      })
+       // Add debug logging
+    console.log('API Response:', response);
+    
+    // Check for property in response
+    if (response && (response.property || response)) {
+      this.setState({
+        property: response.property || response,
+        editing: false,
+        saving: false,
+        newImages: [],
+        imagesToDelete: [],
+        error: null
+      });
+    } else {
+      console.error('Invalid response:', response);
+      throw new Error('Invalid response format');
+    }
+  })
       .catch(error => {
         console.error("Update failed:", error);
         this.setState({ 
