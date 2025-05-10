@@ -99,8 +99,11 @@ class Property extends React.Component {
        // Add debug logging
     console.log('API Response:', response);
     
+    const updatedProperty = {
+      ...response,
+      user: property.user // Preserve existing user data if not in response
+    };
     // Check for property in response
-    if (response && (response.property || response)) {
       this.setState({
         property: response.property || response,
         editing: false,
@@ -109,11 +112,7 @@ class Property extends React.Component {
         imagesToDelete: [],
         error: null
       });
-    } else {
-      console.error('Invalid response:', response);
-      throw new Error('Invalid response format');
-    }
-  })
+    })
       .catch(error => {
         console.error("Update failed:", error);
         this.setState({ 
