@@ -17,7 +17,8 @@ class Property extends React.Component {
     newImages: [],
     imagesToDelete: [],
     saving: false,
-    error: null
+    error: null,
+    currentUser: null
   }
 
   static propTypes = {
@@ -135,7 +136,8 @@ class Property extends React.Component {
   }
 
 
-  componentDidMount() {
+  omponentDidMount() {
+    // Fetch property data
     fetch(`/api/properties/${this.props.property_id}`)
       .then(handleErrors)
       .then(data => {
@@ -143,15 +145,22 @@ class Property extends React.Component {
           property: data.property,
           loading: false,
         })
-      })
+      });
+
+    // Fetch current user data
+    fetch('/api/authenticated')
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          currentUser: data.authenticated ? data.user : null
+        });
+      });
   }
 
   isOwner = () => {
-    const { property } = this.state;
-    const { currentUser } = this.props;
-    
-    console.log('Current User:', currentUser);  // Debug log
-    console.log('Property User:', property.user);  // Debug log
+    const { property, currentUser } = this.state;
+    console.log('Current User:', currentUser);
+    console.log('Property User:', property.user);
     
     return currentUser && 
            property.user && 
