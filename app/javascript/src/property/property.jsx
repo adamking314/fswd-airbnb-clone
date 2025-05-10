@@ -12,6 +12,21 @@ class Property extends React.Component {
     loading: true,
   }
 
+  nextImage = () => {
+    this.setState(prevState => ({
+      currentImageIndex: (prevState.currentImageIndex + 1) % this.state.property.images.length
+    }));
+  }
+
+  prevImage = () => {
+    this.setState(prevState => ({
+      currentImageIndex: prevState.currentImageIndex === 0 
+        ? this.state.property.images.length - 1 
+        : prevState.currentImageIndex - 1
+    }));
+  }
+
+
   componentDidMount() {
     fetch(`/api/properties/${this.props.property_id}`)
       .then(handleErrors)
@@ -41,13 +56,41 @@ class Property extends React.Component {
       bedrooms,
       beds,
       baths,
-      image_url,
+      images,
       user,
     } = property
 
+    const propertyImages = images?.map((image, index) => (
+      <img 
+        key={index}
+        src={image.image_url}
+        alt={`Property ${title} image ${index + 1}`}
+        className="property-image"
+      />
+    ));
+
     return (
       <Layout>
-        <div className="property-image mb-3" style={{ backgroundImage: `url(${image_url})` }} />
+        <div className="carousel-container">
+          {images && images.length > 0 && (
+            <>
+              <img
+                src={images[this.state.currentImageIndex].image_url}
+                alt={`Property ${title}`}
+                className="property-image"
+              />
+              <button onClick={this.prevImage} className="carousel-button prev">
+                &lt;
+              </button>
+              <button onClick={this.nextImage} className="carousel-button next">
+                &gt;
+              </button>
+              <div className="image-counter">
+                {this.state.currentImageIndex + 1} / {images.length}
+              </div>
+            </>
+          )}
+        </div>
         <div className="container">
           <div className="row">
             <div className="info col-12 col-lg-7">
