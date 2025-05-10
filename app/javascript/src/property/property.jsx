@@ -1,6 +1,7 @@
 // property.jsx
 import React from 'react';
 import Layout from '@src/layout';
+import PropTypes from 'prop-types';
 import BookingWidget from './bookingWidget';
 import { handleErrors } from '@utils/fetchHelper';
 
@@ -147,8 +148,14 @@ class Property extends React.Component {
 
   isOwner = () => {
     const { property } = this.state;
-    const currentUser = this.props.currentUser;
-    return currentUser && property.user && currentUser.id === property.user.id;
+    const { currentUser } = this.props;
+    
+    console.log('Current User:', currentUser);  // Debug log
+    console.log('Property User:', property.user);  // Debug log
+    
+    return currentUser && 
+           property.user && 
+           currentUser.id === property.user.id;
   }
 
   updateFormField = (field, value) => {
