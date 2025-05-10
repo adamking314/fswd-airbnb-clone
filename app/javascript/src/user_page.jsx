@@ -22,6 +22,7 @@ class UserProfile extends React.Component {
           this.setState({ username: data.username }, () => {
             this.fetchProperties();
             this.fetchHostBookings(); 
+            console.log('username:', this.state.username);
        });
         } else {
           this.setState({ error: 'Not logged in' });
