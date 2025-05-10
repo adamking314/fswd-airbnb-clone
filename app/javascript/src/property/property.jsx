@@ -137,8 +137,6 @@ class Property extends React.Component {
 
   componentDidMount() {
     // Fetch property data
-    console.log('Component mounting with property_id:', this.props.property_id); // Add debug log
-
     fetch(`/api/properties/${this.props.property_id}`)
       .then(handleErrors)
       .then(data => {
@@ -157,29 +155,26 @@ class Property extends React.Component {
       });
 
     // Fetch current user data
-    fetch('/api/authenticated')
-      .then(handleErrors)
-      .then(data => {
-        console.log('User data:', data); // Debug log
-        this.setState({
-          currentUser: data.authenticated ? data.user : null
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching user:', error);
-      });
-  }
+   fetch('/api/authenticated')
+   .then(res => res.json())
+   .then(data => {
+     if (data && data.id) {
+       this.setState({ currentUser: data });
+     } else {
+       this.setState({ error: 'Not logged in' });
+     }
+   })
+   .catch(() => {
+     this.setState({ error: 'Failed to fetch user' });
+   });
+}
 
-  isOwner = () => {
-    const { property, currentUser } = this.state;
-    console.log('Current User:', currentUser);
-    console.log('Property User:', property.user);
-    
-    return currentUser && 
-           property.user && 
-           currentUser.id === property.user.id;
-  }
-
+isOwner = () => {
+ const { property, currentUser } = this.state;
+ console.log('Current User:', currentUser);
+ console.log('Property User:', property.user);
+ return currentUser && property.user && currentUser.id === property.user.id;
+}
   updateFormField = (field, value) => {
     this.setState(prevState => ({
       form: {
