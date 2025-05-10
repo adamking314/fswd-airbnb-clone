@@ -55,12 +55,15 @@ class Home extends React.Component {
             {properties.map(property => {
               return (
                 <div key={property.id} className="col-6 col-lg-4 mb-4 property">
-                  <a href={`/property/${property.id}`} className="text-body text-decoration-none">
-                    <div className="property-image mb-1 rounded" style={{ backgroundImage: `url(${property.image_url})` }} />
-                    <p className="text-uppercase mb-0 text-secondary"><small><b>{property.city}</b></small></p>
-                    <h6 className="mb-0">{property.title}</h6>
-                    <p className="mb-0"><small>${property.price_per_night} USD/night</small></p>
-                  </a>
+                 <a href={`/property/${property.id}`} className="text-body text-decoration-none">
+                    <div 
+                    className="property-image mb-1 rounded" 
+                    style={{ backgroundImage: `url(${property.images?.[0]?.image_url || '/default-property.jpg'})`}} 
+                    />
+                  <p className="text-uppercase mb-0 text-secondary"><small><b>{property.city}</b></small></p>
+                <h6 className="mb-0">{property.title}</h6>
+               <p className="mb-0"><small>${property.price_per_night} USD/night</small></p>
+               </a>
                 </div>
               )
             })}
