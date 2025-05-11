@@ -24,13 +24,19 @@ class Property extends React.Component {
     
     if (!id) {
       this.setState({ error: 'Property ID is missing' });
+      console.log('Property ID missing');
       return;
     }
   
     // Fetch property data
+    console.log(`Fetching property with ID: ${id}`);
     fetch(`/api/properties/${id}`)
-      .then(res => res.json())
+      .then(res => {
+        console.log('Property data response:', res);
+        return res.json();
+      })
       .then(data => {
+        console.log('Property data:', data);
         this.setState({ property: data, loading: false });
       })
       .catch(error => {
@@ -39,15 +45,21 @@ class Property extends React.Component {
       });
   
     // Fetch current user data
+    console.log('Fetching authenticated user');
     fetch('/api/authenticated', {
       method: 'GET',
       credentials: 'include',
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log('Authenticated user response:', res);
+        return res.json();
+      })
       .then(data => {
         if (data && data.id) {
+          console.log('Authenticated user:', data);
           this.setState({ currentUser: data });
         } else {
+          console.log('Not logged in');
           this.setState({ error: 'Not logged in' });
         }
       })
@@ -56,6 +68,7 @@ class Property extends React.Component {
         this.setState({ error: 'Failed to fetch user' });
       });
   }
+  
 
   isOwner = () => {
     const { property, currentUser } = this.state;
@@ -337,8 +350,7 @@ class Property extends React.Component {
                       />
                     </div>
                   </div>
-                </div>
-                <button type="submit" className="btn btn-primary mt-3" disabled={saving}>
+                </div>             <button type="submit" className="btn btn-primary mt-3" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                   <button type="button" className="btn btn-secondary mt-3 ml-2" onClick={this.startEditing}>
