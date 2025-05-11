@@ -20,60 +20,37 @@ class Property extends React.Component {
   };
 
   componentDidMount() {
-    const { id } = this.props;  // Ensure the property ID is passed correctly
-    
-    if (!id) {
-      this.setState({ error: 'Property ID is missing' });
-      console.log('Property ID missing');
-      return;
-    }
-  
-    // Fetch property data
-    console.log(`Fetching property with ID: ${id}`);
-    fetch(`/api/properties/${id}`)
-      .then(res => {
-        console.log('Property data response:', res);
-        return res.json();
+    fetch(`/api/properties/${this.props.property_id}`)
+    .then(handleErrors)
+    .then(data => {
+      this.setState({
+        property: data.property,
+        loading: false,
       })
-      .then(data => {
-        console.log('Property data:', data);
-        this.setState({ property: data, loading: false });
-      })
-      .catch(error => {
-        console.error('Error fetching property:', error);
-        this.setState({ loading: false, error: 'Failed to load property' });
-      });
-  
-    // Fetch current user data
-    console.log('Fetching authenticated user');
-    fetch('/api/authenticated', {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then(res => {
-        console.log('Authenticated user response:', res);
-        return res.json();
-      })
-      .then(data => {
-        if (data && data.id) {
-          console.log('Authenticated user:', data);
-          this.setState({ currentUser: data });
-        } else {
-          console.log('Not logged in');
-          this.setState({ error: 'Not logged in' });
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching user:', error);
-        this.setState({ error: 'Failed to fetch user' });
-      });
-  }
-  
+    });
 
-  isOwner = () => {
-    const { property, currentUser } = this.state;
-    return currentUser && property.user && currentUser.id === property.user.id;
-  }
+  // Fetch authenticated user info
+  fetch('/api/authenticated')
+  .then(res => res.json())
+  .then(data => {
+    if (data.authenticated) {
+      this.setState({
+        currentUser: {
+          username: data.username,
+          id: data.id,
+        },
+      });
+    } else {
+      this.setState({ error: 'Not logged in' });
+    }
+  });
+}
+
+
+get isOwner() {
+  const { currentUser, property } = this.state;
+  return currentUser && property.user && (currentUser.id === property.user.id);
+}
 
   // Update form field for input fields
   updateFormField = (field, value) => {
@@ -197,7 +174,7 @@ class Property extends React.Component {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
-    const { title, description, city, country, property_type, price_per_night, max_guests, bedrooms, beds, baths, images = [], user } = property;
+    const { title, description, city, country, property_type, price_per_night, max_guests, bedrooms, beds, baths, images = [], user, id } = property;
 
     const isUserOwner = this.isOwner();  // Check if current user is the property owner
 
