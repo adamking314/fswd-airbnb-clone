@@ -22,7 +22,6 @@ class UserProfile extends React.Component {
           this.setState({ username: data.username }, () => {
             this.fetchProperties();
             this.fetchHostBookings(); 
-            console.log('username:', this.state.username);
        });
         } else {
           this.setState({ error: 'Not logged in' });
@@ -99,31 +98,26 @@ class UserProfile extends React.Component {
             <PropertyCreate onSuccess={this.fetchProperties} />
           )}
 
-<div className="row mt-4">
-  {properties.length === 0 ? (
-    <p>You haven’t listed any properties yet. Use the button above to add one!</p>
-  ) : (
-    properties.map(property => (
-      <div key={property.id} className="col-md-4 mb-3">
-        <div className="card">
-          {/* Display the first image if available */}
-          {property.images && property.images.length > 0 && (
-            <img 
-              src={property.images[0]}  // Display the first image in the array
-              className="card-img-top" 
-              alt={property.title} 
-            />
-          )}
-          <div className="card-body">
-            <h5 className="card-title">{property.title}</h5>
-            <p className="card-text">{property.description}</p>
-            <a href={`/property/${property.id}`} className="btn btn-outline-primary btn-sm">Edit</a>
+          <div className="row mt-4">
+            {properties.length === 0 ? (
+              <p>You haven’t listed any properties yet. Use the button above to add one!</p>
+            ) : (
+              properties.map(property => (
+                <div key={property.id} className="col-md-4 mb-3">
+                  <div className="card">
+                    {property.image_url && (
+                      <img src={property.image_url} className="card-img-top" alt={property.title} />
+                    )}
+                    <div className="card-body">
+                      <h5 className="card-title">{property.title}</h5>
+                      <p className="card-text">{property.description}</p>
+                      <a href={`/property/${property.id}`} className="btn btn-outline-primary btn-sm">Edit</a>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        </div>
-      </div>
-    ))
-  )}
-</div>
           <h2 className="mt-5">Bookings on My Properties</h2>
             <div className="row mt-3">
             {this.state.hostBookings.length === 0 ? (

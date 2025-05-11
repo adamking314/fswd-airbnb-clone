@@ -1,6 +1,6 @@
+//property.jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { handleErrors } from '@utils/fetchHelper'; // Assuming you have a fetch helper like this
+import { handleErrors } from '@utils/fetchHelper';
 import Layout from '@src/layout';
 import BookingWidget from './bookingWidget';
 import './property.scss';
@@ -17,11 +17,16 @@ class Property extends React.Component {
     newImages: [],
     imagesToDelete: [],
     saving: false,
-  }
+  };
 
   componentDidMount() {
-    const { id } = this.props;  // Assuming `id` is passed as a prop
-
+    const { id } = this.props;  // Ensure the property ID is passed correctly
+    
+    if (!id) {
+      this.setState({ error: 'Property ID is missing' });
+      return;
+    }
+  
     // Fetch property data
     fetch(`/api/properties/${id}`)
       .then(res => res.json())
@@ -32,11 +37,11 @@ class Property extends React.Component {
         console.error('Error fetching property:', error);
         this.setState({ loading: false, error: 'Failed to load property' });
       });
-
+  
     // Fetch current user data
     fetch('/api/authenticated', {
       method: 'GET',
-      credentials: 'include', // Include cookies for session
+      credentials: 'include',
     })
       .then(res => res.json())
       .then(data => {
@@ -50,6 +55,21 @@ class Property extends React.Component {
         console.error('Error fetching user:', error);
         this.setState({ error: 'Failed to fetch user' });
       });
+  }
+
+  isOwner = () => {
+    const { property, currentUser } = this.state;
+    return currentUser && property.user && currentUser.id === property.user.id;
+  }
+
+  // Update form field for input fields
+  updateFormField = (field, value) => {
+    this.setState(prevState => ({
+      form: {
+        ...prevState.form,
+        [field]: value
+      }
+    }));
   }
 
   startEditing = () => {
@@ -143,26 +163,30 @@ class Property extends React.Component {
     }));
   }
 
+  // Handle image change (if needed)
+  handleImageChange = (e) => {
+    this.setState({
+      newImages: [...e.target.files]
+    });
+  }
+
+  // Handle image deletion (if needed)
+  handleImageDelete = (index) => {
+    const { property } = this.state;
+    this.setState(prevState => ({
+      imagesToDelete: [...prevState.imagesToDelete, property.images[index].id]
+    }));
+  }
+
   render() {
-    const { property, loading, editing, currentImageIndex, saving, form, error } = this.state;
+    const { property, loading, editing, currentImageIndex, saving, form, error, currentUser } = this.state;
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
-    const {
-      title,
-      description,
-      city,
-      country,
-      property_type,
-      price_per_night,
-      max_guests,
-      bedrooms,
-      beds,
-      baths,
-      images = [],
-      user,
-    } = property;
+    const { title, description, city, country, property_type, price_per_night, max_guests, bedrooms, beds, baths, images = [], user } = property;
+
+    const isUserOwner = this.isOwner();  // Check if current user is the property owner
 
     return (
       <Layout>
@@ -215,9 +239,106 @@ class Property extends React.Component {
             <div className="info col-12 col-lg-7">
               {editing ? (
                 <form onSubmit={(e) => { e.preventDefault(); this.saveChanges(); }}>
-                  {/* Render form fields for editing */}
-                  {/* Add the necessary form inputs for title, description, etc. */}
-                  <button type="submit" className="btn btn-primary mt-3" disabled={saving}>
+                  <div className="form-group">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={form.title}
+                      onChange={(e) => this.updateFormField('title', e.target.value)}
+                    />
+                  </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    className="form-control"
+                    value={form.description}
+                    onChange={(e) => this.updateFormField('description', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>City</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={form.city}
+                    onChange={(e) => this.updateFormField('city', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Country</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={form.country}
+                    onChange={(e) => this.updateFormField('country', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Property Type</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={form.property_type}
+                    onChange={(e) => this.updateFormField('property_type', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Price per Night</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={form.price_per_night}
+                    onChange={(e) => this.updateFormField('price_per_night', e.target.value)}
+                  />
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <div className="form-group">
+                      <label>Max Guests</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={form.max_guests}
+                        onChange={(e) => this.updateFormField('max_guests', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label>Bedrooms</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={form.bedrooms}
+                        onChange={(e) => this.updateFormField('bedrooms', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label>Beds</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={form.beds}
+                        onChange={(e) => this.updateFormField('beds', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label>Baths</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={form.baths}
+                        onChange={(e) => this.updateFormField('baths', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" className="btn btn-primary mt-3" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                   <button type="button" className="btn btn-secondary mt-3 ml-2" onClick={this.startEditing}>
@@ -235,11 +356,13 @@ class Property extends React.Component {
                       <small>Hosted by <b>{user?.username || 'Unknown'}</b></small>
                     </p>
                   </div>
-                  {this.isOwner() && (
+
+                  {isUserOwner && (
                     <button onClick={this.startEditing} className="btn btn-primary mb-3">
                       Edit Property
                     </button>
                   )}
+
                   <div>
                     <p className="mb-0 text-capitalize"><b>{property_type}</b></p>
                     <p>{description}</p>
