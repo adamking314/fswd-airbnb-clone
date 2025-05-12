@@ -1,8 +1,8 @@
-// bookingWidget.jsx
 import React from 'react';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
+import moment from 'moment'; 
 
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -73,14 +73,9 @@ class BookingWidget extends React.Component {
         const stripe = Stripe(process.env.STRIPE_PUBLISHABLE_KEY);
 
         stripe.redirectToCheckout({
-          // Make the id field from the Checkout Session creation API response
-          // available to this file, so you can provide it as parameter here
-          // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
           sessionId: response.charge.checkout_session_id,
         }).then((result) => {
-          // If `redirectToCheckout` fails due to a browser or network
-          // error, display the localized error message to your customer
-          // using `result.error.message`.
+          // Handle any error in the checkout process
         });
       })
       .catch(error => {
@@ -92,7 +87,12 @@ class BookingWidget extends React.Component {
 
   onFocusChange = (focusedInput) => this.setState({ focusedInput })
 
-  isDayBlocked = day => this.state.existingBookings.filter(b => day.isBetween(b.start_date, b.end_date, null, '[)')).length > 0
+  // Updated isDayBlocked function
+  isDayBlocked = (day) => {
+    return this.state.existingBookings.filter(b => 
+      day.isBetween(moment(b.start_date), moment(b.end_date), 'day', '[)')
+    ).length > 0;
+  }
 
   render () {
     const { authenticated, startDate, endDate, focusedInput } = this.state;
