@@ -1,4 +1,4 @@
-// src/components/SuccessPage.jsx
+//src//SuccessPage.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Layout from '@src/layout';
@@ -15,15 +15,15 @@ class SuccessPage extends React.Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.match.params; 
-    fetch(`/booking/${id}/success`)
+    const { id } = this.props.match.params; // Get booking id from URL
+    fetch(`/booking/${id}/success`)  // Fetch success data for this booking
       .then(handleErrors)
       .then(data => {
         this.setState({
           booking: data.booking,
           property: data.property,
           loading: false,
-        })
+        });
       })
       .catch(error => {
         this.setState({
@@ -48,7 +48,9 @@ class SuccessPage extends React.Component {
       <Layout>
         <div className="container pt-4">
           <h4 className="mb-1">Booking Successful!</h4>
-          <p className="text-secondary mb-3">Your booking at <strong>{property.title}</strong> has been successfully confirmed!</p>
+          <p className="text-secondary mb-3">
+            Your booking at <strong>{property.title}</strong> has been successfully confirmed!
+          </p>
           <div className="row">
             <div className="col-12">
               <div className="property-image mb-3 rounded" style={{ backgroundImage: `url(${property.image_url})` }} />
