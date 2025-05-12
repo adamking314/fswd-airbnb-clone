@@ -21,38 +21,35 @@ class Property extends React.Component {
 
   componentDidMount() {
     fetch(`/api/properties/${this.props.property_id}`)
-    .then(handleErrors)
-    .then(data => {
-      this.setState({
-        property: data.property,
-        loading: false,
-      })
-    });
-
-  // Fetch authenticated user info
-  fetch('/api/authenticated')
-  .then(res => res.json())
-  .then(data => {
-    if (data.authenticated) {
-      this.setState({
-        currentUser: {
-          username: data.username,
-          id: data.id,
-        },
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          property: data.property,
+          loading: false,
+        });
       });
-    } else {
-      this.setState({ error: 'Not logged in' });
-    }
-  });
-}
 
+    fetch('/api/authenticated')
+      .then(res => res.json())
+      .then(data => {
+        if (data.authenticated) {
+          this.setState({
+            currentUser: {
+              username: data.username,
+              id: data.id,
+            },
+          });
+        } else {
+          this.setState({ error: 'Not logged in' });
+        }
+      });
+  }
 
-get isOwner() {
-  const { currentUser, property } = this.state;
-  return currentUser && property.user && currentUser.id === property.user.id;
-}
+  get isOwner() {
+    const { currentUser, property } = this.state;
+    return currentUser && property.user && currentUser.id === property.user.id;
+  }
 
-  // Update form field for input fields
   updateFormField = (field, value) => {
     this.setState(prevState => ({
       form: {
@@ -139,35 +136,6 @@ get isOwner() {
       });
   }
 
-  nextImage = () => {
-    this.setState(prevState => ({
-      currentImageIndex: (prevState.currentImageIndex + 1) % this.state.property.images.length,
-    }));
-  }
-
-  prevImage = () => {
-    this.setState(prevState => ({
-      currentImageIndex: prevState.currentImageIndex === 0
-        ? this.state.property.images.length - 1
-        : prevState.currentImageIndex - 1,
-    }));
-  }
-
-  // Handle image change (if needed)
-  handleImageChange = (e) => {
-    this.setState({
-      newImages: [...e.target.files]
-    });
-  }
-
-  // Handle image deletion (if needed)
-  handleImageDelete = (index) => {
-    const { property } = this.state;
-    this.setState(prevState => ({
-      imagesToDelete: [...prevState.imagesToDelete, property.images[index].id]
-    }));
-  }
-
   render() {
     const { property, loading, editing, currentImageIndex, saving, form, error, currentUser } = this.state;
 
@@ -176,8 +144,7 @@ get isOwner() {
 
     const { title, description, city, country, property_type, price_per_night, max_guests, bedrooms, beds, baths, images = [], user, id } = property;
 
-    const isUserOwner = this.isOwner; 
-
+    const isUserOwner = this.isOwner;
     return (
       <Layout>
         <div className="carousel-container">
