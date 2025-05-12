@@ -119,23 +119,27 @@ class Property extends React.Component {
       .then(handleErrors)
       .then(response => {
         const updatedProperty = { ...response, user: property.user };
-        this.setState({
-          property: updatedProperty,
-          editing: false,
-          saving: false,
-          newImages: [],
-          imagesToDelete: [],
-          error: null,
+        fetch(`/api/properties/${updatedProperty.id}`)
+        .then(handleErrors)
+        .then(data => {
+          this.setState({
+            property: data.property, // Ensure images are included
+            editing: false,
+            saving: false,
+            newImages: [],
+            imagesToDelete: [],
+            error: null,
+          });
         });
-      })
-      .catch(error => {
-        console.error("Update failed:", error);
-        this.setState({
-          saving: false,
-          error: error.message || 'Failed to update property',
-        });
+    })
+    .catch(error => {
+      console.error("Update failed:", error);
+      this.setState({
+        saving: false,
+        error: error.message || 'Failed to update property',
       });
-  }
+    });
+}
 
   render() {
     const { property, loading, editing, currentImageIndex, saving, form, error, currentUser } = this.state;
