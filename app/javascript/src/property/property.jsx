@@ -49,7 +49,7 @@ class Property extends React.Component {
 
 get isOwner() {
   const { currentUser, property } = this.state;
-  return currentUser && property.user && (currentUser.id === property.user.id);
+  return currentUser && property.user && currentUser.id === property.user.id;
 }
 
   // Update form field for input fields
@@ -176,7 +176,7 @@ get isOwner() {
 
     const { title, description, city, country, property_type, price_per_night, max_guests, bedrooms, beds, baths, images = [], user, id } = property;
 
-    const isUserOwner = this.isOwner();  // Check if current user is the property owner
+    const isUserOwner = this.isOwner; 
 
     return (
       <Layout>
