@@ -47,8 +47,9 @@ class Property extends React.Component {
 
   get isOwner() {
     const { currentUser, property } = this.state;
-    return currentUser && property.user && currentUser.id === property.user.id;
+    return currentUser && property.user && currentUser.username === property.user.username;
   }
+  
 
   updateFormField = (field, value) => {
     this.setState(prevState => ({
