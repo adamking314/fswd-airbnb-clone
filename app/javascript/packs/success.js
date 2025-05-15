@@ -1,2 +1,2 @@
 
-import '@src/successPage';
+import '@src/success';
