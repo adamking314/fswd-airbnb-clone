@@ -45,33 +45,53 @@ module Api
 
 
       def mark_complete
-        # You can find your endpoint's secret in your webhook settings
-        endpoint_secret = ENV['STRIPE_MARK_COMPLETE_WEBHOOK_SIGNING_SECRET']
+        # Retrieve the webhook signing secret from your environment variable
+        endpoint_secret = ENV['STRIPE_WEBHOOK_SECRET']
         event = nil
-        # Verify webhook signature and extract the event
-        # See https://stripe.com/docs/webhooks/signatures for more information.
+    
+        # Get the raw payload and signature from the request
+        sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+        payload = request.body.read
+    
         begin
-          sig_header = request.env['HTTP_STRIPE_SIGNATURE']
-          payload = request.body.read
-          event = Stripe::Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-          )
+          # Verify the webhook signature and parse the event
+          event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
         rescue JSON::ParserError => e
-          # Invalid payload
+          # Handle invalid payload
+          Rails.logger.error "JSON parsing error: #{e.message}"
           return head :bad_request
         rescue Stripe::SignatureVerificationError => e
-          # Invalid signature
+          # Handle invalid signature
+          Rails.logger.error "Signature verification failed: #{e.message}"
           return head :bad_request
         end
+    
+        # Log the event to inspect the data structure
+        Rails.logger.info "Received event: #{event.inspect}"
+    
         # Handle the checkout.session.completed event
         if event['type'] == 'checkout.session.completed'
-          session = event['data']['object']
-          # Fulfill the purchase, mark related charge as complete
-          charge = Charge.find_by(checkout_session_id: session.id)
-          return head :bad_request if !charge
-          charge.update({ complete: true })
-          return head :ok
+          session = event['data']['object'] # The session data
+          Rails.logger.info "Session data: #{session.inspect}"
+    
+          # Find the booking based on the session ID (or use any other relevant identifier)
+          booking_id = session['client_reference_id'] # Use client_reference_id if available
+          booking = Booking.find_by(id: booking_id)
+    
+          if booking
+            # Mark the booking as paid or perform any other necessary updates
+            booking.update(status: 'paid')
+            # Optionally, create a charge record or log additional details
+            Charge.create(booking_id: booking.id, status: 'paid', amount: session['amount_total'])
+    
+            return head :ok
+          else
+            # If booking is not found, log and return an error
+            Rails.logger.error "Booking not found for session ID: #{session['id']}"
+            return head :not_found
+          end
         end
+    
         return head :bad_request
       end
     end
