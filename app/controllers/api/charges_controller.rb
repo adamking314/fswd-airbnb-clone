@@ -26,7 +26,7 @@ module Api
             quantity: 1,
           }],
           mode: "payment",
-          success_url: "#{ENV['URL']}/booking/#{booking.id}/success",
+          success_url: "#{ENV['URL']}/booking/#{success.id}/success",
           cancel_url: "#{ENV['URL']}#{params[:cancel_url]}",
         )
   

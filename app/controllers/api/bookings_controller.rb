@@ -62,29 +62,32 @@ module Api
 
     def success
       booking = Booking.find_by(id: params[:id])
-      
+    
       if booking.nil?
         render json: { error: "Booking not found" }, status: :not_found
         return
       end
-      
+    
       # You can now include the property with the booking
       property = booking.property
-      
+    
       # Check if the booking is paid and prepare the status message
       if booking.is_paid?
         status_message = "Your booking is complete!"
       else
         status_message = "Your booking is being processed."
       end
-      
+    
+      # Generate the image URL using ActiveStorage if an image is attached
+      property_image_url = property.image.attached? ? Rails.application.routes.url_helpers.rails_blob_path(property.image, only_path: true) : nil
+    
       render json: {
         booking: booking,
         status_message: status_message,
         property: {
           id: property.id,
           title: property.title,
-          image_url: property.image_url,  # Adjust this to match your actual property attributes
+          image_url: property_image_url,  # Properly generated image URL
           # Add other property fields as needed
         }
       }

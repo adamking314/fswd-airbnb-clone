@@ -10,7 +10,7 @@ class SuccessPage extends Component {
   };
 
   componentDidMount() {
-    const { id } = this.props.match.params; // Booking ID from URL
+    const { id } = this.props.match.params; // Get the booking ID from the URL
 
     fetch(`/api/bookings/${id}/success`)
       .then((res) => res.json())
@@ -47,7 +47,7 @@ class SuccessPage extends Component {
         <p>Check-in: {booking.start_date}</p>
         <p>Check-out: {booking.end_date}</p>
 
-        {property.images.length > 0 && (
+        {property.images && property.images.length > 0 && (
           <div>
             <img src={property.images[0].image_url} alt={property.title} />
           </div>
