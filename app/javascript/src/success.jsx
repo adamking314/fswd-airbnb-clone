@@ -1,23 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Layout from '@src/layout'; // Assuming you have the Layout component
-
+import Layout from '@src/layout';
 
 class SuccessPage extends React.Component {
-  state = {
-    booking: null,
-    loading: true,
-    error: null,
-  };
-
+  // no change here except use this.props.bookingId
   componentDidMount() {
-    const { bookingId } = this.props.match.params;
-
-    // Fetch booking data based on booking ID (passed in the URL)
+    const bookingId = this.props.bookingId;
     fetch(`/api/bookings/${bookingId}`)
       .then(res => res.json())
-      .then(data => this.setState({ booking: data, loading: false }))
-      .catch(() => this.setState({ error: 'Failed to load booking data', loading: false }));
+      .then(data =>
+        this.setState({ booking: data, loading: false })
+      )
+      .catch(() =>
+        this.setState({ error: 'Failed to load booking data', loading: false })
+      );
   }
 
   render() {
@@ -57,7 +53,11 @@ class SuccessPage extends React.Component {
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('success-page-root');
-  if (root) {
-    ReactDOM.render(<SuccessPage />, root);
-  }
+  if (!root) return;
+
+  const bookingId = root.getAttribute('data-booking-id');
+  ReactDOM.render(
+    <SuccessPage bookingId={bookingId} />,
+    root
+  );
 });
