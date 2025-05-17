@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get '/login' => 'static_pages#login'
   get '/user_page' => 'static_pages#user_page'
 
+  get '/booking/:id/success', to: 'static_pages#success', as: 'booking_success'
+
+
   # API routes should come before static page routes to avoid conflicts
   namespace :api do
     resources :users, only: [:create]
@@ -20,9 +23,8 @@ Rails.application.routes.draw do
     get '/users/:username/bookings', to: 'bookings#guest_bookings'
     get '/charges/new_checkout_session', to: 'charges#new_checkout_session'
     get '/users/:username/host_bookings', to: 'bookings#host_bookings'
-
-    # This is the correct route for API requests to /booking/:id/success
-    get '/booking/:id/success', to: 'bookings#success', as: 'booking_success'
-    post '/charges/mark_complete' => 'charges#mark_complete'
+    
+     post '/charges/mark_complete' => 'charges#mark_complete'
   end
+
 end

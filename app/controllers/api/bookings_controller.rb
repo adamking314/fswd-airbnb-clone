@@ -82,6 +82,8 @@ module Api
       property_image_url = property.image.attached? ? Rails.application.routes.url_helpers.url_for(property.image) : nil
     
       # Render the booking and property details as JSON
+      render :success
+      
       render json: {
         booking: booking,
         status_message: status_message,
