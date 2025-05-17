@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Layout from '@src/layout'; // Assuming you have the Layout component
-import { Link } from 'react-router-dom';
+
 
 class SuccessPage extends React.Component {
   state = {
