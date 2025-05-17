@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import layout from '@src/layout'; 
+import { handleErrors } from '@utils/fetchHelper';
+import './success.scss';
 
 class SuccessPage extends Component {
   state = {
@@ -10,7 +13,7 @@ class SuccessPage extends Component {
   };
 
   componentDidMount() {
-    const { id } = this.props.match.params; // Get the booking ID from the URL
+    const { id } = this.props.match.params; 
 
     fetch(`/api/bookings/${id}/success`)
       .then((res) => res.json())
@@ -38,6 +41,7 @@ class SuccessPage extends Component {
     if (error) return <div>{error}</div>;
 
     return (
+      <layout>
       <div>
         <h1>Booking Successful!</h1>
         <h3>Booking ID: {booking.id}</h3>
@@ -55,6 +59,7 @@ class SuccessPage extends Component {
 
         <button onClick={() => window.location.href = '/'}>Back to Home</button>
       </div>
+      </layout>
     );
   }
 }
