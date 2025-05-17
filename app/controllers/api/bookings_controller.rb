@@ -72,15 +72,16 @@ module Api
       property = booking.property
     
       # Check if the booking is paid and prepare the status message
-      if booking.is_paid?
+      if booking.is_paid? # Ensure this method exists in your model
         status_message = "Your booking is complete!"
       else
         status_message = "Your booking is being processed."
       end
     
       # Generate the image URL using ActiveStorage if an image is attached
-      property_image_url = property.image.attached? ? Rails.application.routes.url_helpers.rails_blob_path(property.image, only_path: true) : nil
+      property_image_url = property.image.attached? ? Rails.application.routes.url_helpers.url_for(property.image) : nil
     
+      # Render the booking and property details as JSON
       render json: {
         booking: booking,
         status_message: status_message,
@@ -88,11 +89,13 @@ module Api
           id: property.id,
           title: property.title,
           image_url: property_image_url,  # Properly generated image URL
+          start_date: booking.start_date,
+          end_date: booking.end_date,
+          price_per_night: property.price_per_night,  # You can add other fields as needed
           # Add other property fields as needed
         }
       }
-    end
-    
+    end    
 
     private
     def booking_params

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     get '/users/:username/host_bookings', to: 'bookings#host_bookings'
 
     # This is the correct route for API requests to /booking/:id/success
-    get '/booking/:id/success', to: 'bookings#success'   # This will route to BookingsController
+    get '/booking/:id/success', to: 'bookings#success', as: 'booking_success'
     post '/charges/mark_complete' => 'charges#mark_complete'
   end
 end
