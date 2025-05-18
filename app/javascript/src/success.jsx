@@ -32,7 +32,7 @@ return (
             <strong>Location:</strong> {property.city}, {property.country}
           </p>
           <p>
-            <strong>Dates:</strong> {start_date} → {end_date}
+            <strong>Dates:</strong> {booking.start_date} → {booking.end_date}
           </p>
           <p>
             <strong>Status:</strong> {paid ? 'Paid' : 'Pending Payment'}
