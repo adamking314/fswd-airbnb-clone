@@ -101,20 +101,20 @@ module Api
       # Render the booking and property details as JSON
       render :success
       
-      rrender json: {
-        id: @booking.id,
-        start_date: @booking.start_date,
-        end_date: @booking.end_date,
-        paid: @booking.paid,  # <--- this!
-        total_price: @booking.total_price,
-        property: {
-          id: @booking.property.id,
-          title: @booking.property.title,
-          city: @booking.property.city,
-          country: @booking.property.country,
-          price_per_night: @booking.property.price_per_night
-        }
+      render json: {
+      id: @booking.id,
+      start_date: @booking.start_date,
+      end_date: @booking.end_date,
+      paid: @booking.paid, # ✅ include this
+      total_price: @booking.total_price, # if you're calculating this
+      property: {
+        id: @booking.property.id,
+        title: @booking.property.title,
+        city: @booking.property.city,
+        country: @booking.property.country,
+        price_per_night: @booking.property.price_per_night
       }
+    }
     end    
 
     private
