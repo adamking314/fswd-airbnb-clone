@@ -112,8 +112,8 @@ module Api
         charge.update({ complete: true })
 
         # ✅ Mark booking as paid
-        booking = charge.booking
-       booking.update(paid: true) if booking
+        booking = Booking.last
+        booking.is_paid?
 
 
         return head :ok
