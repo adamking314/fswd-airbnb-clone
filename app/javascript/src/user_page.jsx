@@ -128,7 +128,7 @@ class UserProfile extends React.Component {
              <h4>{booking.property.title}</h4>
              <p>{booking.property.address}</p>
               <p><strong>Dates:</strong> {booking.start_date} → {booking.end_date}</p>
-              <p><strong>Status: </strong>{booking.paid ? 'Paid' : 'Not Paid'}</p> {/* Add this line */}
+              <p><strong>Status: </strong>{booking.paid ? 'Paid' : 'Not Paid'}</p> 
              </div>
               ))
              )}
