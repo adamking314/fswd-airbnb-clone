@@ -15,21 +15,48 @@ class SuccessPage extends React.Component {
 
   render() {
     const { booking, loading, error } = this.state;
+if (loading) return <p>Loading…</p>;
+if (error)   return <p>{error}</p>;
 
-    if (loading) return <p>Loading…</p>;
-    if (error)   return <p>{error}</p>;
-    if (!booking || !booking.property) 
-      return <p>No booking details available.</p>;
+const { start_date, end_date, paid, total_price } = booking;
+const { property } = booking;  // has title, city, country, price_per_night
 
-    const { property, start_date, end_date, total_price } = booking;
-    return (
-      <Layout>
-        <h2>Booking Successful!</h2>
-        <p><strong>Property:</strong> {property.title}</p>
-        <p><strong>Dates:</strong> {start_date} → {end_date}</p>
-        <p><strong>Total:</strong> ${total_price}</p>
-      </Layout>
-    );
+return (
+  <Layout>
+    <div className="container mt-4">
+      <h2>Booking Successful!</h2>
+      <div className="card">
+        <div className="card-body">
+          <h4 className="card-title">{property.title}</h4>
+          <p>
+            <strong>Location:</strong> {property.city}, {property.country}
+          </p>
+          <p>
+            <strong>Dates:</strong> {start_date} → {end_date}
+          </p>
+          <p>
+            <strong>Status:</strong> {paid ? 'Paid' : 'Pending Payment'}
+          </p>
+          <p>
+            <strong>Total Price:</strong> ${total_price}
+          </p>
+          <a
+            href={`/property/${property.id}`}
+            className="btn btn-outline-primary btn-sm"
+          >
+            View Property
+          </a>
+        </div>
+      </div>
+      <div className="mt-4">
+        <a href="/user_page" className="btn btn-primary">
+          Go to My Profile
+        </a>
+      </div>
+    </div>
+  </Layout>
+);
+
   }
 }
 
