@@ -101,17 +101,18 @@ module Api
       # Render the booking and property details as JSON
       render :success
       
-      render json: {
-        booking: booking,
-        status_message: status_message,
+      rrender json: {
+        id: @booking.id,
+        start_date: @booking.start_date,
+        end_date: @booking.end_date,
+        paid: @booking.paid,  # <--- this!
+        total_price: @booking.total_price,
         property: {
-          id: property.id,
-          title: property.title,
-          image_url: property_image_url,  # Properly generated image URL
-          start_date: booking.start_date,
-          end_date: booking.end_date,
-          price_per_night: property.price_per_night,  # You can add other fields as needed
-          # Add other property fields as needed
+          id: @booking.property.id,
+          title: @booking.property.title,
+          city: @booking.property.city,
+          country: @booking.property.country,
+          price_per_night: @booking.property.price_per_night
         }
       }
     end    

@@ -11,6 +11,7 @@ class SuccessPage extends React.Component {
       .then(r => r.json())
       .then(data => this.setState({ booking: data, loading: false }))
       .catch(() => this.setState({ error: 'Failed to load booking', loading: false }));
+      console.log("Fetched booking:", data);  // 🧪 add this
   }
 
   render() {
