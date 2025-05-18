@@ -45,6 +45,40 @@ module Api
       end
     end
 
+    def new_checkout_session
+      token = cookies.signed[:airbnb_session_token]
+      session = Session.find_by(token: token)
+      return render json: { error: 'user not logged in' }, status: :unauthorized if !session
+    
+      booking = Booking.find_by(id: params[:booking_id])
+      return render json: { error: 'cannot find booking' }, status: :not_found if !booking
+    
+      property = booking.property
+      days_booked = (booking.end_date - booking.start_date).to_i
+      amount = days_booked * property.price_per_night
+    
+      stripe_session = Stripe::Checkout::Session.create(
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            unit_amount: (amount * 100.0).to_i,
+            product_data: {
+              name: "Trip for #{property.title}",
+              description: "Your booking is for #{booking.start_date} to #{booking.end_date}.",
+            },
+          },
+          quantity: 1,
+        }],
+        mode: "payment",
+        success_url: "#{ENV['URL']}/booking/#{booking.id}/success",
+        cancel_url: "#{ENV['URL']}/user_page",
+      )
+    
+      render json: { url: stripe_session.url }
+    end
+    
+
     def mark_complete
       # You can find your endpoint's secret in your webhook settings
       endpoint_secret = ENV['STRIPE_MARK_COMPLETE_WEBHOOK_SIGNING_SECRET']
