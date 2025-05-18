@@ -9,7 +9,10 @@ class SuccessPage extends React.Component {
     const bookingId = this.props.bookingId;
     fetch(`/api/bookings/${bookingId}`)
       .then(r => r.json())
-      .then(data => this.setState({ booking: data, loading: false }))
+      .then(data => {
+        console.log("Fetched booking:", data);  // 🧪 add this
+        this.setState({ booking: data, loading: false });
+      })
       .catch(() => this.setState({ error: 'Failed to load booking', loading: false }));
   }
 
