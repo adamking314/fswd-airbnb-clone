@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     get '/users/:username/bookings', to: 'bookings#guest_bookings'
     get '/charges/new_checkout_session', to: 'charges#new_checkout_session'
     get '/users/:username/host_bookings', to: 'bookings#host_bookings'
-    get '/api/bookings/:id', to: 'bookings#show'
+    get '/bookings/:id', to: 'bookings#show'
     
      post '/charges/mark_complete' => 'charges#mark_complete'
   end
