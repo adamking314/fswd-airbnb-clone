@@ -101,12 +101,18 @@ module Api
       # Render the booking and property details as JSON
       render :success
       
-      render json: {
+      @booking = Booking.includes(:property, :charges).find_by(id: params[:id])
+      
+  if @booking
+    latest_charge = @booking.charges.order(created_at: :desc).first
+    paid = latest_charge&.complete || false
+
+    render json: {
       id: @booking.id,
       start_date: @booking.start_date,
       end_date: @booking.end_date,
-      paid: @booking.paid, # ✅ include this
-      total_price: @booking.total_price, # if you're calculating this
+      paid: paid,  # 👈 use the existing `complete` field
+      total_price: @booking.total_price,  # or calculate it dynamically
       property: {
         id: @booking.property.id,
         title: @booking.property.title,
@@ -115,7 +121,9 @@ module Api
         price_per_night: @booking.property.price_per_night
       }
     }
-    end    
+  else
+    render json: { error: 'Booking not found' }, status: :not_found
+  end
 
     private
     def booking_params
