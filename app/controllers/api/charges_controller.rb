@@ -69,24 +69,17 @@ module Api
 
       # Handle the checkout.session.completed event
       if event['type'] == 'checkout.session.completed'
-        session_obj = event.data.object
-      
-        # 1) Find the Charge record
-        charge = Charge.find_by(checkout_session_id: session_obj.id)
-        return head :bad_request unless charge
-      
-        # 2) Mark the Charge complete
-        charge.update!(complete: true)
-      
-        # 3) Mark the Booking paid
-        #    either via the charge relationship...
-        booking = charge.booking
-        #    ...or look up from the client_reference_id/metadata:
-        # booking = Booking.find(session_obj.client_reference_id || session_obj.metadata.booking_id)
-        booking.update!(paid: true)
-      
-        head :ok
+        session = event['data']['object']
+
+        # Fulfill the purchase, mark related charge as complete
+        charge = Charge.find_by(checkout_session_id: session.id)
+        return head :bad_request if !charge
+
+        charge.update({ complete: true })
+
+        return head :ok
       end
+
       return head :bad_request
     end
   end
