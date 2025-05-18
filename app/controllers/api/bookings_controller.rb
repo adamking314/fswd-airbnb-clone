@@ -60,6 +60,23 @@ module Api
       render json: bookings, include: { property: { only: [:title, :address] } }
     end
 
+    def show
+      @booking = Booking.includes(:property).find_by(id: params[:id])
+      return render json: { error: 'Booking not found' }, status: :not_found if @booking.nil?
+
+      render json: {
+        booking: @booking,
+        property: {
+          id:               @booking.property.id,
+          title:            @booking.property.title,
+          city:             @booking.property.city,
+          country:          @booking.property.country,
+          price_per_night:  @booking.property.price_per_night,
+          # …any other fields you need…
+        }
+      }
+    end
+
     def success
       booking = Booking.find_by(id: params[:id])
     
