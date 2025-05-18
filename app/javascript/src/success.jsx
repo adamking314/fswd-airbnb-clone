@@ -6,8 +6,9 @@ class SuccessPage extends React.Component {
   state = { booking: null, loading: true, error: null };
 
   componentDidMount() {
-    const id = this.props.booking.Id;
-    fetch(`/api/bookings/${id}/success`)
+    const bookingId = booking.property.id;
+    console.log(bookingId);
+    fetch(`/api/booking/${bookingId}`)
       .then(r => r.json())
       .then(data => this.setState({ booking: data, loading: false }))
       .catch(() => this.setState({ error: 'Failed to load', loading: false }));
