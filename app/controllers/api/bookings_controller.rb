@@ -105,7 +105,7 @@ module Api
       id: @booking.id,
       start_date: @booking.start_date,
       end_date: @booking.end_date,
-      paid: paid, # ✅ include this
+      paid: @booking.paid, # ✅ include this
       total_price: @booking.total_price, # if you're calculating this
       property: {
         id: @booking.property.id,
