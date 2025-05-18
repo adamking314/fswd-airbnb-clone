@@ -60,7 +60,11 @@ class SuccessPage extends React.Component {
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('success-page-root');
-  if (!root) return;
-  const bookingId = root.getAttribute('data-booking-id');
-  ReactDOM.render(<SuccessPage bookingId={bookingId} />, root);
+  console.log('root element:', root);
+  console.log('dataset:', root && root.dataset);
+  const bookingId = root && root.dataset.bookingId;
+  console.log('bookingId:', bookingId);
+  if (bookingId) {
+    ReactDOM.render(<SuccessPage bookingId={bookingId} />, root);
+  }
 });
