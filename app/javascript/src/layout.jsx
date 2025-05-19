@@ -1,5 +1,21 @@
-// layout.js
 import React from 'react';
+
+const handleLogout = () => {
+  fetch('/api/sessions/0', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => {
+      if (res.ok) {
+        window.location.href = '/'; // Redirect after logout
+      } else {
+        console.error('Failed to log out');
+      }
+    })
+    .catch(err => console.error('Logout error:', err));
+};
 
 const Layout = (props) => {
   return (
@@ -18,11 +34,18 @@ const Layout = (props) => {
               <li className="nav-item">
                 <a className="nav-link" href="/user_page">Profile</a>
               </li>
+              <li className="nav-item">
+                <button className="btn btn-danger ms-2" onClick={handleLogout}>
+                  Log Out
+                </button>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
+
       {props.children}
+
       <footer className="p-3 bg-light">
         <div>
           <p className="me-3 mb-0 text-secondary">Airbnb Clone</p>
@@ -30,6 +53,6 @@ const Layout = (props) => {
       </footer>
     </React.Fragment>
   );
-}
+};
 
 export default Layout;
