@@ -115,10 +115,6 @@ module Api
         return head :ok
       end
 
-       # ✅ Mark booking as paid
-       booking = Booking.last
-       booking.is_paid? 
-
 
       return head :bad_request
     end

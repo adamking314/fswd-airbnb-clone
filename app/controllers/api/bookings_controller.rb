@@ -72,9 +72,6 @@ module Api
           city:             @booking.property.city,
           country:          @booking.property.country,
           price_per_night:  @booking.property.price_per_night,
-          image_url:        @booking.property.image.attached? ? Rails.application.routes.url_helpers.url_for(@booking.property.image) : nil
-          paid:           @booking.complete,
-          total_price:    @booking.total_price,
           # …any other fields you need…
         }
       }
@@ -105,19 +102,18 @@ module Api
       render :success
       
       render json: {
-      id: @booking.id,
-      start_date: @booking.start_date,
-      end_date: @booking.end_date,
-      paid: @booking.complete, # ✅ include this
-      total_price: @booking.total_price, # if you're calculating this
-      property: {
-        id: @booking.property.id,
-        title: @booking.property.title,
-        city: @booking.property.city,
-        country: @booking.property.country,
-        price_per_night: @booking.property.price_per_night
+        booking: booking,
+        status_message: status_message,
+        property: {
+          id: property.id,
+          title: property.title,
+          image_url: property_image_url,  # Properly generated image URL
+          start_date: booking.start_date,
+          end_date: booking.end_date,
+          price_per_night: property.price_per_night,  # You can add other fields as needed
+          # Add other property fields as needed
+        }
       }
-    }
     end    
 
     private
