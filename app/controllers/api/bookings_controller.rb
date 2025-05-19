@@ -113,6 +113,7 @@ module Api
       id: @booking.id,
       start_date: @booking.start_date,
       end_date: @booking.end_date,
+
       total_price: @booking.total_price, # if you're calculating this
       property: {
         id: @booking.property.id,
@@ -126,7 +127,7 @@ module Api
 
     private
     def booking_params
-      params.require(:booking).permit(:property_id, :start_date, :end_date, :is_paid)
+      params.require(:booking).permit(:property_id, :start_date, :end_date)
     end
   end
 end
