@@ -73,6 +73,7 @@ module Api
           start_date: booking.start_date,
           end_date: booking.end_date,
           paid: paid,
+          guest_username: booking.user.username,
            property: {
               title: booking.property.title,
               address: booking.property.try(:address)

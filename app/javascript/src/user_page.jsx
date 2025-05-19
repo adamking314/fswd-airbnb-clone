@@ -128,6 +128,7 @@ class UserProfile extends React.Component {
              <div key={booking.id} className="card mb-3 p-3">
              <h4>{booking.property.title}</h4>
              <p>{booking.property.address}</p>
+             <p><strong>Guest:</strong> {booking.guest_username}</p>
               <p><strong>Dates:</strong> {booking.start_date} → {booking.end_date}</p>
               <p><strong>Status: </strong>{booking.paid ? 'Paid' : 'Not Paid'}</p> 
              </div>
