@@ -17,7 +17,7 @@ class HostBookings extends React.Component {
             return response.json();
           })
           .then(data => {
-            this.setState({ bookings: data.bookings, loading: false });
+            this.setState({ bookings: data, loading: false });
           })
           .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
