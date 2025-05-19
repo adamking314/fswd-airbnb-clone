@@ -40,5 +40,6 @@ module Api
         render json: { error: 'No active session' }, status: :not_found
       end
     end
+    
   end
 end
