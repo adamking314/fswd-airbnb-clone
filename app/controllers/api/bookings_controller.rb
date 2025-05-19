@@ -62,23 +62,27 @@ module Api
 
     def show
       @booking = Booking.includes(:property).find_by(id: params[:id])
-      return render json: { error: 'Booking not found' }, status: :not_found if @booking.nil?
-
-      render json: {
-        id: @booking.id,
-        start_date: @booking.start_date,
-        end_date: @booking.end_date,
-        paid: paid, # ✅ status derived from charge
-        total_price: (@booking.end_date - @booking.start_date).to_i * @booking.property.price_per_night,
-        property: {
-          id: @booking.property.id,
-          title: @booking.property.title,
-          city: @booking.property.city,
-          country: @booking.property.country,
-          price_per_night: @booking.property.price_per_night
-      }
-    }
-      
+      if @booking
+        latest_charge = @booking.charges.order(created_at: :desc).first
+        paid = latest_charge&.complete || false
+    
+        render json: {
+          id: @booking.id,
+          start_date: @booking.start_date,
+          end_date: @booking.end_date,
+          paid: paid, # ✅ status derived from charge
+          total_price: (@booking.end_date - @booking.start_date).to_i * @booking.property.price_per_night,
+          property: {
+            id: @booking.property.id,
+            title: @booking.property.title,
+            city: @booking.property.city,
+            country: @booking.property.country,
+            price_per_night: @booking.property.price_per_night
+          }
+        }
+      else
+        render json: { error: 'Booking not found' }, status: :not_found
+      end
 
     end
 
