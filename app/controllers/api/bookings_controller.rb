@@ -62,9 +62,21 @@ module Api
       return render json: { error: 'user not found' }, status: :not_found unless user
     
       properties = user.properties
-      bookings = Booking.where(property_id: properties.pluck(:id))
+      bookings = Booking.where(property_id: properties.pluck(:id)).includes(:property, :charges)
     
-      render json: bookings, include: { property: { only: [:title, :address] } }
+      render json: bookings.map { |booking|
+        latest_charge = booking.charges.order(created_at: :desc).first
+        paid = latest_charge&.complete || false
+    
+        {
+          id: booking.id,
+          start_date: booking.start_date,
+          end_date: booking.end_date,
+          paid: paid,  # ✅ Include payment status
+          property_title: booking.property.title,
+          property_address: booking.property.try(:address) # safe navigation in case address is nil
+        }
+      }
     end
 
     def show

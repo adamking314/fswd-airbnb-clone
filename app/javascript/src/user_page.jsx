@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropertyCreate from './createProperty';
 import Layout from '@src/layout';
 import GuestBookings from './property/guestBookings';
+import './user_page.scss';
 
 class UserProfile extends React.Component {
   state = {
