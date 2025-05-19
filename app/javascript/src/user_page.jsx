@@ -14,6 +14,7 @@ class UserProfile extends React.Component {
     showCreateForm: false,
     showGuestBookings: false, 
   }
+  
 
   componentDidMount() {
     fetch('/api/authenticated')
@@ -25,8 +26,11 @@ class UserProfile extends React.Component {
             this.fetchHostBookings(); 
        });
         } else {
-          this.setState({ error: 'Not logged in' });
+          window.location.href = '/login'; // 👈 redirect to login if not auth
         }
+      })
+      .catch(() => {
+        window.location.href = '/login';
       });
   }
   fetchProperties = () => {

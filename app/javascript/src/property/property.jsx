@@ -40,8 +40,11 @@ class Property extends React.Component {
             },
           });
         } else {
-          this.setState({ error: 'Not logged in' });
+          window.location.href = '/login'; // 👈 redirect to login if not auth
         }
+      })
+      .catch(() => {
+        window.location.href = '/login';
       });
   }
 
