@@ -1,21 +1,6 @@
 import React from 'react';
+import LogOut from './login/logOut';
 
-const handleLogout = () => {
-  fetch('/api/sessions/0', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(res => {
-      if (res.ok) {
-        window.location.href = '/'; // Redirect after logout
-      } else {
-        console.error('Failed to log out');
-      }
-    })
-    .catch(err => console.error('Logout error:', err));
-};
 
 const Layout = (props) => {
   return (
@@ -34,12 +19,11 @@ const Layout = (props) => {
               <li className="nav-item">
                 <a className="nav-link" href="/user_page">Profile</a>
               </li>
-              <li className="nav-item">
-                <button className="btn btn-danger ms-2" onClick={handleLogout}>
-                  Log Out
-                </button>
-              </li>
-            </ul>
+              </ul>
+              <div>
+          <LogOut/>
+          </div>
+            
           </div>
         </div>
       </nav>
