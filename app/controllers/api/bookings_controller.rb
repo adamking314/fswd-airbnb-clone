@@ -40,13 +40,20 @@ module Api
 
     def guest_bookings
       user = User.find_by(username: params[:username])
-      bookings = Booking.where(user_id: user.id).includes(:property)
+      bookings = Booking.where(user_id: user.id).includes(:property, :charges)
     
       render json: bookings.map { |booking| 
-        booking.as_json.merge(
-          property_image_url: booking.property.image_url,
-          property_title: booking.property.title 
-        )
+        latest_charge = booking.charges.order(created_at: :desc).first
+        paid = latest_charge&.complete || false
+    
+        {
+          id: booking.id,
+          start_date: booking.start_date,
+          end_date: booking.end_date,
+          paid: paid,  # 👈 include paid status
+          property_title: booking.property.title,
+          property_image_url: booking.property.image_url
+        }
       }
     end
 
