@@ -31,15 +31,12 @@ module Api
     def destroy
       token = cookies.signed[:airbnb_session_token]
       session = Session.find_by(token: token)
-    
-      if session
-        session.destroy
-        cookies.delete(:airbnb_session_token)
-        render json: { success: true }
-      else
-        render json: { error: 'No active session' }, status: :not_found
+
+      if session&.destroy
+        render json: {
+          success: true
+        }
       end
-    end
-    
+    end    
   end
 end
