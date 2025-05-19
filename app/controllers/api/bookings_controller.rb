@@ -65,18 +65,20 @@ module Api
       bookings = Booking.where(property_id: properties.pluck(:id)).includes(:property, :charges)
     
       render json: bookings.map { |booking|
-        latest_charge = booking.charges.order(created_at: :desc).first
-        paid = latest_charge&.complete || false
-    
+          latest_charge = booking.charges.order(created_at: :desc).first
+          paid = latest_charge&.complete || false
+
         {
           id: booking.id,
           start_date: booking.start_date,
           end_date: booking.end_date,
-          paid: paid,  # ✅ Include payment status
-          property_title: booking.property.title,
-          property_address: booking.property.try(:address) # safe navigation in case address is nil
+          paid: paid,
+           property: {
+              title: booking.property.title,
+              address: booking.property.try(:address)
+            }
+           }
         }
-      }
     end
 
     def show
