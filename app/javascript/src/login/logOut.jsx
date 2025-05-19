@@ -5,7 +5,7 @@ import './login.scss';
 
 class LogoutFunction extends React.Component {
   logout = () => {
-    fetch('/api/sessions', safeCredentials({
+    fetch('/api/sessions/1', safeCredentials({
       method: 'DELETE',
       credentials: 'include',
     }))
