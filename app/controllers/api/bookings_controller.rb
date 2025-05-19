@@ -72,7 +72,7 @@ module Api
           city:             @booking.property.city,
           country:          @booking.property.country,
           price_per_night:  @booking.property.price_per_night,
-          # …any other fields you need…
+          paid:             @booking.complete,
         }
       }
     end
