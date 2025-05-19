@@ -61,28 +61,23 @@ module Api
     end
 
     def show
-      @booking = Booking.includes(:property, :charges).find_by(id: params[:id])
-      if @booking
-        latest_charge = @booking.charges.order(created_at: :desc).first
-        paid = latest_charge&.complete || false
-    
-        render json: {
-          id: @booking.id,
-          start_date: @booking.start_date,
-          end_date: @booking.end_date,
-          paid: paid,  # 👈 use the existing `complete` field
-          total_price: @booking.total_price,  # or calculate it dynamically
-          property: {
-            id: @booking.property.id,
-            title: @booking.property.title,
-            city: @booking.property.city,
-            country: @booking.property.country,
-            price_per_night: @booking.property.price_per_night
-          }
+      @booking = Booking.includes(:property).find_by(id: params[:id])
+      return render json: { error: 'Booking not found' }, status: :not_found if @booking.nil?
+
+      render json: {
+        booking: @booking,
+        property: {
+          id:               @booking.property.id,
+          title:            @booking.property.title,
+          city:             @booking.property.city,
+          country:          @booking.property.country,
+          price_per_night:  @booking.property.price_per_night,
+          image_url:        @booking.property.image.attached? ? Rails.application.routes.url_helpers.url_for(@booking.property.image) : nil
+          paid:           @booking.complete,
+          total_price:    @booking.total_price,
+          # …any other fields you need…
         }
-      else
-        render json: { error: 'Booking not found' }, status: :not_found
-      end
+      }
     end
 
     def success
@@ -113,7 +108,7 @@ module Api
       id: @booking.id,
       start_date: @booking.start_date,
       end_date: @booking.end_date,
-
+      paid: @booking.complete, # ✅ include this
       total_price: @booking.total_price, # if you're calculating this
       property: {
         id: @booking.property.id,
