@@ -49,6 +49,7 @@ class Home extends React.Component {
     return (
       <Layout>
         <div className="container pt-4">
+          <h1>hello world</h1>
           <h4 className="mb-1">Top-rated places to stay</h4>
           <p className="text-secondary mb-3">Explore some of the best-reviewed stays in the world</p>
           <div className="row">
